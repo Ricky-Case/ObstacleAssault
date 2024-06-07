@@ -1,0 +1,21 @@
+# Folders
+Content/BlockGame/
+Content/Hour_of_Code/
+Content/LearningKit_Games/
+Content/SCK_Casual01/
+Binaries
+DerivedDataCache
+Intermediate
+Saved
+
+# Files
+.vscode
+.vs
+*.VC.db
+*.opensdf
+*.opendb
+*.sdf
+*.sln
+*.suo
+*.xcodeproj
+*.xcworkspace
