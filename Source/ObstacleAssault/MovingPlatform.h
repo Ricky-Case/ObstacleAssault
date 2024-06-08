@@ -24,8 +24,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	UPROPERTY(EditAnywhere)
-	FVector actorLocation = FVector(1.0, 2.0, 3.0);
+	float FindDistanceTravelled();
 
-	float startTime = 0.0f;
+	FVector nextLocation = FVector(0.0f, 0.0f, 0.0f);
+	FVector startingLocation = FVector(-14960.0f,-2640.0f,4056.0f);
+	
+	UPROPERTY(EditAnywhere, Category="Moving Platform")
+		FVector platformVelocity = FVector(200.0f, -100.0f, 0.0f);
+	UPROPERTY(EditAnywhere)
+		float maximumDistance = 500.0f;
 };
