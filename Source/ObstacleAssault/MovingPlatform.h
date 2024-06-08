@@ -25,8 +25,7 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere)
-	FVector myVector = FVector(1.0, 2.0, 3.0);
+	FVector actorLocation = FVector(1.0, 2.0, 3.0);
 
-	UPROPERTY(EditAnywhere)
-	float xF = 0;
+	float startTime = 0.0f;
 };

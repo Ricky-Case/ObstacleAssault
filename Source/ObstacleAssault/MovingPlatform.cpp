@@ -15,8 +15,8 @@ AMovingPlatform::AMovingPlatform()
 void AMovingPlatform::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	myVector.X = xF;
+
+	SetActorLocation(actorLocation);
 }
 
 // Called every frame
@@ -24,5 +24,8 @@ void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	// Move the MovingPlatform.
+	actorLocation += FVector(5.0, -2.0, 0.0);
+	SetActorLocation(actorLocation);
 }
 
