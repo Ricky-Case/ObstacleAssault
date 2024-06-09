@@ -16,6 +16,15 @@ void AMovingPlatform::BeginPlay()
 {
 	Super::BeginPlay();
 	startingLocation = GetActorLocation();
+	targetLocation = startingLocation
+					+ (
+						platformVelocity / (
+							FMath::Sqrt(
+								platformVelocity.X * platformVelocity.X
+								+ platformVelocity.Y * platformVelocity.Y
+								+ platformVelocity.Z * platformVelocity.Z
+						))
+					) * moveDistance;
 	nextLocation = startingLocation;
 }
 
@@ -24,9 +33,11 @@ void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(FindDistanceTravelled() >= maximumDistance)
+	if(FindDistance(startingLocation, GetActorLocation()) >= moveDistance)
 	{
-		startingLocation = GetActorLocation();
+		FVector newTarget = startingLocation;
+		startingLocation = targetLocation;
+		targetLocation = newTarget;
 		platformVelocity *= -1.0f;
 	}
 
@@ -35,11 +46,11 @@ void AMovingPlatform::Tick(float DeltaTime)
 	SetActorLocation(nextLocation);
 }
 
-float AMovingPlatform::FindDistanceTravelled()
+float AMovingPlatform::FindDistance(FVector posA, FVector posB)
 {
-	FVector travelVector = GetActorLocation() - startingLocation;
+	FVector travelVector = posB - posA;
 
-	float distanceTravelled = (
+	float distance = (
 		FMath::Sqrt(
 			travelVector.X * travelVector.X
 			+ travelVector.Y * travelVector.Y
@@ -47,5 +58,5 @@ float AMovingPlatform::FindDistanceTravelled()
 		)
 	);
 
-	return distanceTravelled;
+	return distance;
 }
