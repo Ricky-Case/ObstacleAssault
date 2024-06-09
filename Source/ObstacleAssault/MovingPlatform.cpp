@@ -4,11 +4,14 @@
 #include "MovingPlatform.h"
 
 // Sets default values
-AMovingPlatform::AMovingPlatform()
-{
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+AMovingPlatform::AMovingPlatform() { PrimaryActorTick.bCanEverTick = true; } // Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 
+// Called every frame
+void AMovingPlatform::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	MovePlatform(DeltaTime);
+	RotatePlatform(DeltaTime);
 }
 
 // Called when the game starts or when spawned
@@ -26,31 +29,36 @@ void AMovingPlatform::BeginPlay()
 						))
 					) * moveDistance;
 	nextLocation = startingLocation;
+
+	UE_LOG(LogTemp, Display, TEXT("MOVE DISTANCE: %f"), moveDistance);
 }
 
-// Called every frame
-void AMovingPlatform::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
+bool AMovingPlatform::PlatformShouldRotate() const { return (FindDistance(startingLocation, GetActorLocation()) >= moveDistance); }
 
-	if(FindDistance(startingLocation, GetActorLocation()) >= moveDistance)
+void AMovingPlatform::MovePlatform(float DeltaTime)
+{
+	if(PlatformShouldRotate())
 	{
 		FVector newTarget = startingLocation;
 		startingLocation = targetLocation;
 		targetLocation = newTarget;
 		platformVelocity *= -1.0f;
+
+		UE_LOG(LogTemp, Display, TEXT("%s REVERSING."), *GetName());
+		UE_LOG(LogTemp, Display, TEXT("OVERSHOT TARGET BY: %f"), FindDistance(startingLocation, GetActorLocation()));
 	}
 
-	// Move the MovingPlatform.
 	nextLocation += (platformVelocity * DeltaTime);
 	SetActorLocation(nextLocation);
 }
 
-float AMovingPlatform::FindDistance(FVector posA, FVector posB)
-{
-	FVector travelVector = posB - posA;
+void AMovingPlatform::RotatePlatform(float DeltaTime) { AddActorLocalRotation(rotationVelocity * DeltaTime); }
 
-	float distance = (
+float AMovingPlatform::FindDistance(FVector posA, FVector posB) const
+{
+	const FVector travelVector = posB - posA;
+
+	const float distance = (
 		FMath::Sqrt(
 			travelVector.X * travelVector.X
 			+ travelVector.Y * travelVector.Y
